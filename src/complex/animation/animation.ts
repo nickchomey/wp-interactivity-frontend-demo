@@ -64,29 +64,6 @@ store( 'animation', {
 				context._animationFrameId = undefined;
 			}
 		},
-
-		reset() {
-			const context = getContext<AnimationContext>();
-			context.progress = 0;
-			context.loopCount = 0;
-		},
-
-		toggleAnimationType() {
-			const context = getContext<AnimationContext>();
-			if ( ! context.toggleKey ) return;
-			const key = context.toggleKey;
-			context[ key ] = ! context[ key ];
-		},
-
-		speedUp() {
-			const context = getContext<AnimationContext>();
-			context.speed = Math.min( context.maxSpeed, context.speed + context.speedStep );
-		},
-
-		slowDown() {
-			const context = getContext<AnimationContext>();
-			context.speed = Math.max( context.minSpeed, context.speed - context.speedStep );
-		},
 	},
 
 	callbacks: {

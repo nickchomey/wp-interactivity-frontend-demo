@@ -10,10 +10,10 @@
         </p>
         <div class="demo-area" data-wp-interactive="animation" data-wp-context='{ "isPlaying": false, "progress": 0, "slideEnabled": true, "scaleEnabled": false, "rotateEnabled": false, "colorEnabled": false, "speed": 1, "loopCount": 0, "duration": 5000, "minSpeed": 0.5, "maxSpeed": 3, "speedStep": 0.25 }'>
             <div class="flex justify-center gap-sm mb-md flex-wrap">
-                <button class="btn btn--ghost btn--sm" data-wp-context='{ "toggleKey": "slideEnabled" }' data-wp-class--active="context[context.toggleKey]" data-wp-on--click="actions.toggleAnimationType">Slide</button>
-                <button class="btn btn--ghost btn--sm" data-wp-context='{ "toggleKey": "scaleEnabled" }' data-wp-class--active="context[context.toggleKey]" data-wp-on--click="actions.toggleAnimationType">Scale</button>
-                <button class="btn btn--ghost btn--sm" data-wp-context='{ "toggleKey": "rotateEnabled" }' data-wp-class--active="context[context.toggleKey]" data-wp-on--click="actions.toggleAnimationType">Rotate</button>
-                <button class="btn btn--ghost btn--sm" data-wp-context='{ "toggleKey": "colorEnabled" }' data-wp-class--active="context[context.toggleKey]" data-wp-on--click="actions.toggleAnimationType">Color</button>
+                <button class="btn btn--ghost btn--sm" data-wp-context='{ "toggleKey": "slideEnabled" }' data-wp-class--active="context[context.toggleKey]" data-wp-on--click="context.toggleKey && (context[context.toggleKey] = !context[context.toggleKey])">Slide</button>
+                <button class="btn btn--ghost btn--sm" data-wp-context='{ "toggleKey": "scaleEnabled" }' data-wp-class--active="context[context.toggleKey]" data-wp-on--click="context.toggleKey && (context[context.toggleKey] = !context[context.toggleKey])">Scale</button>
+                <button class="btn btn--ghost btn--sm" data-wp-context='{ "toggleKey": "rotateEnabled" }' data-wp-class--active="context[context.toggleKey]" data-wp-on--click="context.toggleKey && (context[context.toggleKey] = !context[context.toggleKey])">Rotate</button>
+                <button class="btn btn--ghost btn--sm" data-wp-context='{ "toggleKey": "colorEnabled" }' data-wp-class--active="context[context.toggleKey]" data-wp-on--click="context.toggleKey && (context[context.toggleKey] = !context[context.toggleKey])">Color</button>
             </div>
 
             <div class="flex justify-center py-lg">
@@ -39,13 +39,13 @@
                     <span data-wp-show="!context.isPlaying">▶ Play</span>
                     <span data-wp-show="context.isPlaying">⏸ Pause</span>
                 </button>
-                <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.reset">Reset</button>
+                <button class="btn btn--ghost btn--sm" data-wp-on--click="context.progress = 0; context.loopCount = 0">Reset</button>
             </div>
 
             <div class="flex justify-center gap-sm mt-sm">
-                <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.slowDown" data-wp-bind--disabled="context.speed <= context.minSpeed">Slower</button>
+                <button class="btn btn--ghost btn--sm" data-wp-on--click="context.speed = Math.max(context.minSpeed, context.speed - context.speedStep)" data-wp-bind--disabled="context.speed <= context.minSpeed">Slower</button>
                 <span class="text-sm font-mono"><span data-wp-text="context.speed">1</span>x</span>
-                <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.speedUp" data-wp-bind--disabled="context.speed >= context.maxSpeed">Faster</button>
+                <button class="btn btn--ghost btn--sm" data-wp-on--click="context.speed = Math.min(context.maxSpeed, context.speed + context.speedStep)" data-wp-bind--disabled="context.speed >= context.maxSpeed">Faster</button>
             </div>
         </div>
     </div>
