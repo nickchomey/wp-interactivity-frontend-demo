@@ -42,20 +42,6 @@ export enum CommandType {
 	Delete = 'delete',
 }
 
-// Lookup tables (eliminate switches)
-const PRIORITY_BADGE: Record<Priority, string> = {
-	[Priority.High]: '!',
-	[Priority.Medium]: '•',
-	[Priority.Low]: '○',
-};
-
-const REVISION_ICON: Partial<Record<CommandType, string>> = {
-	[CommandType.Move]: '⇢',
-	[CommandType.Create]: '✦',
-	[CommandType.Edit]: '✎',
-	[CommandType.Delete]: '◌',
-};
-
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -413,44 +399,8 @@ const initNewCardModal = ( context: KanbanContext, columnId: string | null ): vo
 };
 
 // =============================================================================
-// STORE HELPER FUNCTIONS (for derived state getters)
+// STORE HELPERS
 // =============================================================================
-
-type EditValueKey = 'title' | 'priority' | 'description' | 'assignee';
-
-/** Check if current card has specified priority */
-const hasPriority = ( priority: Priority ) => (): boolean => {
-	const context = getContext<KanbanContext>();
-	const card = context.item as KanbanCard | undefined;
-	return card?.priority === priority;
-};
-
-/** Check if current command has specified type */
-const isCommandType = ( type: CommandType ) => (): boolean => {
-	const context = getContext<KanbanContext>();
-	const command = context.item as Command | undefined;
-	return command?.type === type;
-};
-
-/** Extract old/new value from edit command */
-const getEditValue = ( key: EditValueKey, which: 'old' | 'new' ) => (): string => {
-	const context = getContext<KanbanContext>();
-	const command = context.item as EditCommand | undefined;
-	if ( ! command || command.type !== CommandType.Edit ) return '';
-	const values = which === 'old' ? command.oldValues : command.newValues;
-	const value = values[ key ];
-	if ( key === 'description' && ! value ) return '(empty)';
-	if ( key === 'assignee' && ! value ) return '(nobody)';
-	return value;
-};
-
-/** Check if a value changed in edit command */
-const hasEditChange = ( key: EditValueKey ) => (): boolean => {
-	const context = getContext<KanbanContext>();
-	const command = context.item as EditCommand | undefined;
-	if ( ! command || command.type !== CommandType.Edit ) return false;
-	return command.oldValues[ key ] !== command.newValues[ key ];
-};
 
 /** Extract card ID from any command type */
 const getCardIdFromCommand = ( command: Command | undefined ): string | null => {
@@ -489,29 +439,6 @@ const performRedo = ( context: KanbanContext ): void => {
 
 store( 'kanban', {
 	state: {
-		// Is this card being dragged?
-		get isBeingDragged(): boolean {
-			const context = getContext<KanbanContext>();
-			// context.item is the card when inside card wp-each
-			const card = context.item as KanbanCard | undefined;
-			return context.draggedCardId === card?.id;
-		},
-
-		// Is this column a drop target?
-		get isDropTarget(): boolean {
-			const context = getContext<KanbanContext>();
-			// context.item is the column when inside column wp-each
-			const column = context.item as KanbanColumn | undefined;
-			return context.dropTargetColumnId === column?.id;
-		},
-
-		// Is this card a drop target?
-		get isCardDropTarget(): boolean {
-			const context = getContext<KanbanContext>();
-			const card = context.item as KanbanCard | undefined;
-			return context.dropTargetCardId === card?.id;
-		},
-
 		// Get filtered cards for current column
 		get filteredCards(): KanbanCard[] {
 			const context = getContext<KanbanContext>();
@@ -541,155 +468,9 @@ store( 'kanban', {
 			return cards;
 		},
 
-		// Can undo?
-		get canUndo(): boolean {
-			const context = getContext<KanbanContext>();
-			return context.historyIndex >= 0;
-		},
-
-		// Can redo?
-		get canRedo(): boolean {
-			const context = getContext<KanbanContext>();
-			return context.historyIndex < context.history.length - 1;
-		},
-
-		// Is editing this card?
-		get isEditing(): boolean {
-			const context = getContext<KanbanContext>();
-			const card = context.item as KanbanCard | undefined;
-			return context.editingCardId === card?.id;
-		},
-
-		// Can save the edit? (title not empty)
-		get canSaveEdit(): boolean {
-			const context = getContext<KanbanContext>();
-			return context.editTitle.trim().length > 0;
-		},
-
-		// Is this card draggable? (false when editing)
-		get isDraggable(): boolean {
-			const context = getContext<KanbanContext>();
-			const card = context.item as KanbanCard | undefined;
-			return context.editingCardId !== card?.id;
-		},
-
-		// Is this card high priority?
-		get isHighPriority(): boolean {
-			return hasPriority( Priority.High )();
-		},
-
-		// Is this card medium priority?
-		get isMediumPriority(): boolean {
-			return hasPriority( Priority.Medium )();
-		},
-
-		// Is this card low priority?
-		get isLowPriority(): boolean {
-			return hasPriority( Priority.Low )();
-		},
-
-		// Get priority badge text
-		get priorityBadge(): string {
-			const card = getContext<KanbanContext>().item as KanbanCard | undefined;
-			return card?.priority ? PRIORITY_BADGE[ card.priority ] : '○';
-		},
-
-		// Drop position indicator
-		get isDropBefore(): boolean {
-			const context = getContext<KanbanContext>();
-			const card = context.item as KanbanCard | undefined;
-			return (
-				context.dropTargetCardId === card?.id &&
-				context.dropPosition === 'before'
-			);
-		},
-
-		get isDropAfter(): boolean {
-			const context = getContext<KanbanContext>();
-			const card = context.item as KanbanCard | undefined;
-			return (
-				context.dropTargetCardId === card?.id &&
-				context.dropPosition === 'after'
-			);
-		},
-
 		// ========================
 		// REVISION HISTORY
 		// ========================
-
-		// Is revision panel open?
-		get isRevisionPanelOpen(): boolean {
-			const context = getContext<KanbanContext>();
-			return context.revisionPanelOpen;
-		},
-
-		// Toggle icon for revision panel
-		get revisionToggleIcon(): string {
-			const context = getContext<KanbanContext>();
-			return context.revisionPanelOpen ? '▼' : '▶';
-		},
-
-		// Get revision list for rendering
-		get revisionList(): Command[] {
-			const context = getContext<KanbanContext>();
-			return context.history;
-		},
-
-		// Current revision index
-		get currentRevisionIndex(): number {
-			const context = getContext<KanbanContext>();
-			return context.historyIndex;
-		},
-
-		// Are we at the initial state (before any edits)?
-		get isAtInitialState(): boolean {
-			const context = getContext<KanbanContext>();
-			return context.historyIndex < 0;
-		},
-
-		// Is this the current revision?
-		get isCurrentRevision(): boolean {
-			const context = getContext<KanbanContext>();
-			const command = context.item as Command | undefined;
-			if ( ! command ) return false;
-			const commandIndex = context.history.findIndex( c => c.seqId === command.seqId );
-			return commandIndex === context.historyIndex;
-		},
-
-		// Get icon for command type
-		get revisionIcon(): string {
-			const command = getContext<KanbanContext>().item as Command | undefined;
-			return command?.type ? REVISION_ICON[ command.type as CommandType ] ?? '·' : '·';
-		},
-
-		// Get command type for CSS class
-		get revisionType(): string {
-			const context = getContext<KanbanContext>();
-			const command = context.item as Command | undefined;
-			return command?.type || '';
-		},
-
-		// Should we show the text description? (false for moves since we render visually)
-		get showRevisionDescription(): boolean {
-			const context = getContext<KanbanContext>();
-			const command = context.item as Command | undefined;
-			return command?.type !== CommandType.Move;
-		},
-
-		// Should we show the visual move display?
-		get showRevisionMove(): boolean {
-			const context = getContext<KanbanContext>();
-			const command = context.item as Command | undefined;
-			return command?.type === CommandType.Move;
-		},
-
-		// Is this an in-column move (reordering within same column)?
-		get isInColumnMove(): boolean {
-			const context = getContext<KanbanContext>();
-			const command = context.item as MoveCommand | undefined;
-			if ( ! command || command.type !== CommandType.Move ) return false;
-			return command.from.columnId === command.to.columnId;
-		},
 
 		// Get the column name for in-column moves
 		get revisionMoveColumn(): string {
@@ -700,66 +481,6 @@ store( 'kanban', {
 			return column?.title || '';
 		},
 
-		// Should we show the priority change visual?
-		get showRevisionPriority(): boolean {
-			return hasEditChange( 'priority' )();
-		},
-
-		// Should we show the title change visual?
-		get showRevisionTitleChange(): boolean {
-			return hasEditChange( 'title' )();
-		},
-
-		// Get old priority for edit
-		get revisionOldPriority(): string {
-			return getEditValue( 'priority', 'old' )();
-		},
-
-		// Get new priority for edit
-		get revisionNewPriority(): string {
-			return getEditValue( 'priority', 'new' )();
-		},
-
-		// Get old title for edit
-		get revisionOldTitle(): string {
-			return getEditValue( 'title', 'old' )();
-		},
-
-		// Get new title for edit
-		get revisionNewTitle(): string {
-			return getEditValue( 'title', 'new' )();
-		},
-
-		// Should we show the description change visual?
-		get showRevisionDescriptionChange(): boolean {
-			return hasEditChange( 'description' )();
-		},
-
-		// Get old description for edit
-		get revisionOldDescription(): string {
-			return getEditValue( 'description', 'old' )();
-		},
-
-		// Get new description for edit
-		get revisionNewDescription(): string {
-			return getEditValue( 'description', 'new' )();
-		},
-
-		// Should we show the assignee change visual?
-		get showRevisionAssigneeChange(): boolean {
-			return hasEditChange( 'assignee' )();
-		},
-
-		// Get old assignee for edit
-		get revisionOldAssignee(): string {
-			return getEditValue( 'assignee', 'old' )();
-		},
-
-		// Get new assignee for edit
-		get revisionNewAssignee(): string {
-			return getEditValue( 'assignee', 'new' )();
-		},
-
 		// Get column name where card was created
 		get revisionCreateColumn(): string {
 			const context = getContext<KanbanContext>();
@@ -767,29 +488,6 @@ store( 'kanban', {
 			if ( ! command || command.type !== CommandType.Create ) return '';
 			const column = context.columns.find( c => c.id === command.columnId );
 			return column?.title || '';
-		},
-
-		// Is this a create command?
-		get isCreateCommand(): boolean {
-			return isCommandType( CommandType.Create )();
-		},
-
-		// Is this a delete command?
-		get isDeleteCommand(): boolean {
-			return isCommandType( CommandType.Delete )();
-		},
-
-		// Is this an edit command?
-		get isEditCommand(): boolean {
-			return isCommandType( CommandType.Edit )();
-		},
-
-		// Show card title for edits when title wasn't changed
-		get showRevisionEditCardTitle(): boolean {
-			const context = getContext<KanbanContext>();
-			const command = context.item as EditCommand | undefined;
-			if ( ! command || command.type !== CommandType.Edit ) return false;
-			return command.oldValues.title === command.newValues.title;
 		},
 
 		// Get card title from revision
@@ -844,21 +542,6 @@ store( 'kanban', {
 			if ( minutes < 60 ) return `${ minutes } min ago`;
 			if ( hours < 24 ) return `${ hours }h ago`;
 			return `${ Math.floor( hours / 24 ) }d ago`;
-		},
-
-		// Should this card be highlighted due to revision hover?
-		get isRevisionHighlighted(): boolean {
-			const context = getContext<KanbanContext>();
-			const card = context.item as KanbanCard | undefined;
-			if ( ! card || ! context.hoveredRevisionId ) return false;
-
-			// Simply check if this card's ID matches the hovered revision ID
-			return card.id === context.hoveredRevisionId;
-		},
-
-		// Get card ID from current revision item (for hover tracking)
-		get revisionCardId(): string | null {
-			return getCardIdFromCommand( getContext<KanbanContext>().item as Command | undefined );
 		},
 	},
 
