@@ -82,14 +82,6 @@ const { state, actions } = store( 'formWizard', {
             actions.nextStep();
 		},
 
-		prevStep: () => {
-			const context = getContext<FormWizardContext>();
-			if ( context.currentStep > 1 ) {
-				context.currentStep--;
-			}
-            context.needsFocus = true;
-		},
-
 		validateField: () => {
 			const context = getContext<FormWizardContext>();
 			const field = context.fieldName;

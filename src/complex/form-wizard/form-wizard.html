@@ -54,7 +54,7 @@
 
             <!-- Navigation -->
             <div class="flex justify-between mt-md" data-wp-show="!context.isComplete">
-                <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.prevStep" data-wp-bind--disabled="context.currentStep <= 1 || context.isSubmitting" disabled="true">← Back</button>
+                <button class="btn btn--ghost btn--sm" data-wp-on--click="context.currentStep > 1 && context.currentStep--; context.needsFocus = true" data-wp-bind--disabled="context.currentStep <= 1 || context.isSubmitting" disabled="true">← Back</button>
                 <div class="flex gap-sm">
                     <button class="btn btn--primary btn--sm" data-wp-show="context.currentStep !== 3" data-wp-bind--disabled="!(context.currentStep < context.totalSteps && state.isStepValid)" data-wp-on--click="actions.nextStep">Continue →</button>
                     <button class="btn btn--secondary btn--sm" data-wp-show="context.currentStep === 3" data-wp-class--no-outline="context.isSubmitting" data-wp-on--click="actions.submitForm">
