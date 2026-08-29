@@ -38,27 +38,6 @@ const getCurrentIndex = ( context: DragDropContext ): number => {
 };
 
 store( 'dragDrop', {
-	state: {
-		// Is this item being dragged?
-		get isBeingDragged(): boolean {
-			const context = getContext<DragDropContext>();
-			return context.draggedId === context.item?.id;
-		},
-		// Is this item a drop target?
-		get isDropTarget(): boolean {
-			const context = getContext<DragDropContext>();
-			return context.dropTargetId === context.item?.id;
-		},
-		// Can this item move up?
-		get canMoveUp(): boolean {
-			return getCurrentIndex( getContext<DragDropContext>() ) > 0;
-		},
-		// Can this item move down?
-		get canMoveDown(): boolean {
-			const context = getContext<DragDropContext>();
-			return getCurrentIndex( context ) < context.items.length - 1;
-		},
-	},
 	actions: {
 		// Start dragging - called on dragstart
 		handleDragStart: withSyncEvent( ( event: DragEvent ) => {
