@@ -16,12 +16,6 @@ interface CounterContext {
 }
 
 store( 'counter', {
-	state: {
-		get isAtMinimum(): boolean {
-			const context = getContext<CounterContext>();
-			return context.count <= 0;
-		},
-	},
 	actions: {
 		increment: () => {
 			const context = getContext<CounterContext>();
