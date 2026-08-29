@@ -34,57 +34,23 @@ interface AnimationContext {
 
 store( 'animation', {
 	state: {
-		get progressFloatingPercent(): string {
-			const context = getContext<AnimationContext>();
-			return `${ context.progress * 100 }%`;
-		},
-		get progressPercent(): string {
-			const context = getContext<AnimationContext>();
-			return `${ Math.round( context.progress * 100 ) }%`;
-		},
 		get transformStyle(): string {
 			const context = getContext<AnimationContext>();
 			const progress = context.progress;
 			const transforms: string[] = [];
-
-			if ( context.slideEnabled ) {
-				transforms.push( `translateX(${ ( progress - 0.5 ) * 200 }px)` );
-			}
-			if ( context.scaleEnabled ) {
-				transforms.push( `scale(${ 0.5 + progress * 0.5 })` );
-			}
-			if ( context.rotateEnabled ) {
-				transforms.push( `rotate(${ progress * 360 }deg)` );
-			}
-
+			if ( context.slideEnabled ) transforms.push( `translateX(${ ( progress - 0.5 ) * 200 }px)` );
+			if ( context.scaleEnabled ) transforms.push( `scale(${ 0.5 + progress * 0.5 })` );
+			if ( context.rotateEnabled ) transforms.push( `rotate(${ progress * 360 }deg)` );
 			return transforms.join( ' ' );
 		},
 		get colorStyle(): string {
 			const context = getContext<AnimationContext>();
 			if ( ! context.colorEnabled ) return '';
-
 			const progress = context.progress;
-			// Interpolate between cyan and magenta
 			const r = Math.round( 0 + ( 247 - 0 ) * progress );
 			const g = Math.round( 245 - ( 245 - 37 ) * progress );
 			const b = Math.round( 212 + ( 133 - 212 ) * progress );
 			return `rgb(${ r }, ${ g }, ${ b })`;
-		},
-		// Derived state: is this animation toggle button active?
-		get isAnimationTypeActive(): boolean {
-			const context = getContext<AnimationContext>();
-			if ( ! context.toggleKey ) return false;
-			return context[ context.toggleKey ];
-		},
-		// Derived state: is speed at minimum?
-		get isMinSpeed(): boolean {
-			const context = getContext<AnimationContext>();
-			return context.speed <= context.minSpeed;
-		},
-		// Derived state: is speed at maximum?
-		get isMaxSpeed(): boolean {
-			const context = getContext<AnimationContext>();
-			return context.speed >= context.maxSpeed;
 		},
 	},
 	actions: {
