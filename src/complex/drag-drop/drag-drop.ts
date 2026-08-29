@@ -71,12 +71,6 @@ store( 'dragDrop', {
 			}
 		} ),
 
-		// Handle dragleave
-		handleDragLeave: withSyncEvent( () => {
-			const context = getContext<DragDropContext>();
-			context.dropTargetId = null;
-		} ),
-
 		// Handle drop
 		handleDrop: withSyncEvent( ( event: DragEvent ) => {
 			event.preventDefault();
@@ -94,14 +88,6 @@ store( 'dragDrop', {
 				}
 			}
 
-			context.isDragging = false;
-			context.draggedId = null;
-			context.dropTargetId = null;
-		} ),
-
-		// Handle dragend - cleanup
-		handleDragEnd: withSyncEvent( () => {
-			const context = getContext<DragDropContext>();
 			context.isDragging = false;
 			context.draggedId = null;
 			context.dropTargetId = null;
