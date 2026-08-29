@@ -14,46 +14,46 @@
                     class="tab-btn"
                     role="tab"
                     data-wp-context='{ "tabId": "tab1" }'
-                    data-wp-class--active="state.isTabActive"
-                    data-wp-bind--aria-selected="state.isTabActive"
+                    data-wp-class--active="context.activeTab === context.tabId"
+                    data-wp-bind--aria-selected="context.activeTab === context.tabId"
                     data-wp-on--click="actions.setActiveTab"
                 >Prologue</button>
                 <button
                     class="tab-btn"
                     role="tab"
                     data-wp-context='{ "tabId": "tab2" }'
-                    data-wp-class--active="state.isTabActive"
-                    data-wp-bind--aria-selected="state.isTabActive"
+                    data-wp-class--active="context.activeTab === context.tabId"
+                    data-wp-bind--aria-selected="context.activeTab === context.tabId"
                     data-wp-on--click="actions.setActiveTab"
                 >Chapter</button>
                 <button
                     class="tab-btn"
                     role="tab"
                     data-wp-context='{ "tabId": "tab3" }'
-                    data-wp-class--active="state.isTabActive"
-                    data-wp-bind--aria-selected="state.isTabActive"
+                    data-wp-class--active="context.activeTab === context.tabId"
+                    data-wp-bind--aria-selected="context.activeTab === context.tabId"
                     data-wp-on--click="actions.setActiveTab"
                 >Epilogue</button>
             </div>
 
-            <div class="tab-panel" role="tabpanel" data-wp-context='{ "panelId": "tab1" }' data-wp-bind--hidden="!state.isPanelVisible">
+            <div class="tab-panel" role="tabpanel" data-wp-context='{ "panelId": "tab1" }' data-wp-show="context.activeTab === context.panelId">
                 <p class="text-sm italic">"Every journey begins with a single click..."</p>
             </div>
-            <div class="tab-panel" role="tabpanel" data-wp-context='{ "panelId": "tab2" }' data-wp-bind--hidden="!state.isPanelVisible" hidden="true">
+            <div class="tab-panel" role="tabpanel" data-wp-context='{ "panelId": "tab2" }' data-wp-show="context.activeTab === context.panelId">
                 <p class="text-sm italic">"The middle path—where content finds its rhythm."</p>
             </div>
-            <div class="tab-panel" role="tabpanel" data-wp-context='{ "panelId": "tab3" }' data-wp-bind--hidden="!state.isPanelVisible" hidden="true">
+            <div class="tab-panel" role="tabpanel" data-wp-context='{ "panelId": "tab3" }' data-wp-show="context.activeTab === context.panelId">
                 <p class="text-sm italic">"All good things reach their conclusion here."</p>
             </div>
         </div>
     </div>
     <div class="module__directives">
+        <span class="directive-tag directive-tag--curated">data-wp-show</span>
         <span class="directive-tag directive-tag--curated">data-wp-bind--aria-selected</span>
         <span class="directive-tag directive-tag--curated">data-wp-on--keydown</span>
         <span class="directive-tag directive-tag--full">data-wp-interactive</span>
         <span class="directive-tag directive-tag--full">data-wp-context</span>
         <span class="directive-tag directive-tag--full">data-wp-class--active</span>
         <span class="directive-tag directive-tag--full">data-wp-on--click</span>
-        <span class="directive-tag directive-tag--full">data-wp-bind--hidden</span>
     </div>
 </div>

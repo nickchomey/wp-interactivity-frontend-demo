@@ -21,18 +21,6 @@ interface TabsContext {
 }
 
 const { actions } = store( 'tabs', {
-	state: {
-		// Derived state: is the current tab button active?
-		get isTabActive(): boolean {
-			const context = getContext<TabsContext>();
-			return context.activeTab === context.tabId;
-		},
-		// Derived state: is the current panel visible?
-		get isPanelVisible(): boolean {
-			const context = getContext<TabsContext>();
-			return context.activeTab === context.panelId;
-		},
-	},
 	actions: {
 		setActiveTab: () => {
 			const context = getContext<TabsContext>();
