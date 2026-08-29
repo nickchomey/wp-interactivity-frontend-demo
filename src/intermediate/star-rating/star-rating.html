@@ -13,13 +13,13 @@
             data-wp-class--bad="context.maxRating > 1 && (context.hoverRating || context.rating) < Math.ceil(context.maxRating / 2)"
             data-wp-class--average="context.maxRating > 1 && (context.hoverRating || context.rating) === Math.ceil(context.maxRating / 2)"
             data-wp-class--good="(context.hoverRating || context.rating) > Math.ceil(context.maxRating / 2) || (context.maxRating === 1 && (context.hoverRating || context.rating) === 1)">
-            <div class="flex justify-center gap-sm" data-wp-on--mouseleave="actions.clearHoverRating">
+            <div class="flex justify-center gap-sm" data-wp-on--mouseleave="context.hoverRating = 0">
                 <template data-wp-each="state.stars" data-wp-each-key="context.item">
                     <span
                         class="star"
                         data-wp-class--filled="(context.hoverRating || context.rating) >= context.item"
-                        data-wp-on--click="actions.setRating"
-                        data-wp-on--mouseover="actions.setHoverRating"
+                        data-wp-on--click="context.item !== undefined && (context.rating = context.item)"
+                        data-wp-on--mouseover="context.item !== undefined && (context.hoverRating = context.item)"
                     >★</span>
                 </template>
             </div>

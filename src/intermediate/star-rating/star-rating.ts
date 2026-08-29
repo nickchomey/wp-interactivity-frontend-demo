@@ -30,24 +30,6 @@ store( 'starRating', {
 		},
 	},
 	actions: {
-		setRating: () => {
-			const context = getContext<StarRatingContext>();
-			// The item is provided by wp-each context wrapper
-			if ( context.item !== undefined ) {
-				context.rating = context.item;
-			}
-		},
-		setHoverRating: () => {
-			const context = getContext<StarRatingContext>();
-			// The item is provided by wp-each context wrapper
-			if ( context.item !== undefined ) {
-				context.hoverRating = context.item;
-			}
-		},
-		clearHoverRating: () => {
-			const context = getContext<StarRatingContext>();
-			context.hoverRating = 0;
-		},
 		submitRating: () => {
 			const context = getContext<StarRatingContext>();
 			if ( context.rating > 0 ) {
