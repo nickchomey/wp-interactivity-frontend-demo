@@ -130,29 +130,5 @@ store( 'dataTable', {
 				context.sortDirection = 'asc';
 			}
 		},
-
-		nextPage() {
-			const context = getContext<DataTableContext>();
-			const state = store( 'dataTable' ).state as unknown as { totalPages: number };
-			if ( context.currentPage < state.totalPages ) {
-				context.currentPage++;
-			}
-		},
-
-		prevPage() {
-			const context = getContext<DataTableContext>();
-			if ( context.currentPage > 1 ) {
-				context.currentPage--;
-			}
-		},
-
-		setStatusFilter() {
-			const context = getContext<DataTableContext>();
-			if ( context.filterValue !== undefined ) {
-				context.statusFilter = context.filterValue;
-				context.currentPage = 1;
-				context.selectedRows = [];
-			}
-		},
 	},
 } );

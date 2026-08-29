@@ -18,9 +18,9 @@
             >
 
             <div class="flex gap-xs mt-sm mb-sm flex-wrap">
-                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "" }' data-wp-class--active="context.statusFilter === context.filterValue" data-wp-on--click="actions.setStatusFilter">All</button>
-                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "active" }' data-wp-class--active="context.statusFilter === context.filterValue" data-wp-on--click="actions.setStatusFilter">Active</button>
-                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "inactive" }' data-wp-class--active="context.statusFilter === context.filterValue" data-wp-on--click="actions.setStatusFilter">Inactive</button>
+                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "" }' data-wp-class--active="context.statusFilter === context.filterValue" data-wp-on--click="context.statusFilter = context.filterValue; context.currentPage = 1; context.selectedRows = []">All</button>
+                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "active" }' data-wp-class--active="context.statusFilter === context.filterValue" data-wp-on--click="context.statusFilter = context.filterValue; context.currentPage = 1; context.selectedRows = []">Active</button>
+                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "inactive" }' data-wp-class--active="context.statusFilter === context.filterValue" data-wp-on--click="context.statusFilter = context.filterValue; context.currentPage = 1; context.selectedRows = []">Inactive</button>
             </div>
 
             <table class="data-table">
@@ -55,9 +55,9 @@
                     <span data-wp-text="state.paginatedData.length">0</span> of <span data-wp-text="state.totalCount">0</span> entries
                 </p>
                 <div class="flex gap-xs items-center">
-                    <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.prevPage" data-wp-bind--disabled="context.currentPage === 1">←</button>
+                    <button class="btn btn--ghost btn--sm" data-wp-on--click="context.currentPage > 1 && context.currentPage--" data-wp-bind--disabled="context.currentPage === 1">←</button>
                     <span class="text-sm font-mono"><span data-wp-text="context.currentPage">1</span> / <span data-wp-text="state.totalPages">1</span></span>
-                    <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.nextPage" data-wp-bind--disabled="context.currentPage >= state.totalPages">→</button>
+                    <button class="btn btn--ghost btn--sm" data-wp-on--click="context.currentPage < state.totalPages && context.currentPage++" data-wp-bind--disabled="context.currentPage >= state.totalPages">→</button>
                 </div>
             </div>
         </div>
