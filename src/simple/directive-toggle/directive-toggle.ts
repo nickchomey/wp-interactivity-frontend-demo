@@ -16,9 +16,4 @@ const { state } = store( 'directiveToggle', {
 			return state.showAllDirectives ? 'Show curated' : 'View all directives';
 		},
 	},
-	actions: {
-		toggleShowAll(): void {
-			state.showAllDirectives = !state.showAllDirectives;
-		},
-	},
 } );
