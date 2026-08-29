@@ -16,12 +16,6 @@ interface ClassToggleContext {
 }
 
 store( 'classToggle', {
-	state: {
-		get activeStateText(): string {
-			const context = getContext<ClassToggleContext>();
-			return context.isActive ? 'Active' : 'Dormant';
-		},
-	},
 	actions: {
 		toggleActive: () => {
 			const context = getContext<ClassToggleContext>();

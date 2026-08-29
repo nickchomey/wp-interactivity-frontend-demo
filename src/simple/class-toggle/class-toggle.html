@@ -14,7 +14,7 @@
                 data-wp-class--active="context.isActive"
                 data-wp-class--highlighted="context.isHighlighted"
             >
-                <p class="text-sm">State: <span class="font-display" data-wp-text="state.activeStateText">Dormant</span></p>
+                <p class="text-sm">State: <span class="font-display" data-wp-text="context.isActive ? 'Active' : 'Dormant'">Dormant</span></p>
                 <p class="text-xs text-faint">Touches: <span data-wp-text="context.clickCount">0</span></p>
             </div>
             <div class="flex gap-sm mt-md">
