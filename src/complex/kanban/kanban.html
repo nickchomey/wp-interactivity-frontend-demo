@@ -19,7 +19,7 @@
                 <input type="text" class="kanban-search input"
                     placeholder="Search cards..."
                     data-wp-input="context.searchQuery">
-                <button class="btn btn--ghost btn--sm" data-wp-show="context.searchQuery" data-wp-on--click="actions.clearSearch">✕</button>
+                <button class="btn btn--ghost btn--sm" data-wp-show="context.searchQuery" data-wp-on--click="context.searchQuery = ''">✕</button>
             </div>
             <div class="kanban-toolbar__filter">
                 <select class="kanban-filter input" data-wp-input="context.filterPriority">
@@ -109,7 +109,7 @@
                                     </select>
                                     <div class="kanban-card__edit-actions">
                                         <button class="btn btn--primary btn--sm" data-wp-bind--disabled="context.editTitle.trim().length === 0" data-wp-on--click="actions.saveEdit">Save</button>
-                                        <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.cancelEdit">Cancel</button>
+                                        <button class="btn btn--ghost btn--sm" data-wp-on--click="context.editingCardId = null">Cancel</button>
                                     </div>
                                 </div>
 
@@ -146,7 +146,7 @@
                         data-wp-class--active="context.history.findIndex(c => c.seqId === context.item.seqId) === context.historyIndex"
                         data-wp-on--click="actions.jumpToRevision"
                         data-wp-on--mouseenter="actions.setHoveredRevision"
-                        data-wp-on--mouseleave="actions.clearHoveredRevision"
+                        data-wp-on--mouseleave="context.hoveredRevisionId = null"
                         tabindex="0"
                         role="button">
                         <span class="revision-icon" data-wp-class--icon-move="context.item.type === 'move'" data-wp-class--icon-create="context.item.type === 'create'" data-wp-class--icon-edit="context.item.type === 'edit'" data-wp-class--icon-delete="context.item.type === 'delete'"></span>
@@ -202,7 +202,7 @@
 
         <!-- New Card Modal -->
         <div class="kanban-modal-overlay" data-wp-show="context.newCardModalOpen" data-wp-on--click="actions.closeNewCardModal" data-wp-watch="callbacks.focusNewCardInput">
-            <div class="kanban-modal" data-wp-on--click="actions.stopPropagation">
+            <div class="kanban-modal" data-wp-on--click="evt.stopPropagation()">
                 <h3 class="kanban-modal__title">New Card</h3>
                 <div class="kanban-modal__field">
                     <label class="kanban-modal__label">Title</label>

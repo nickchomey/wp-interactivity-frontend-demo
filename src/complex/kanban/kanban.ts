@@ -276,11 +276,6 @@ const pushCommand = ( context: KanbanContext, command: Command ): void => {
 const findColumn = ( columns: KanbanColumn[], id: string ): KanbanColumn | undefined =>
 	columns.find( ( c ) => c.id === id );
 
-/** Extract value from input event */
-const getInputValue = <T extends HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(
-	event: Event
-): string => ( event.target as T ).value;
-
 /** Check if element is an input-like element */
 const isInputElement = (
 	target: unknown
@@ -742,30 +737,6 @@ store( 'kanban', {
 			resetNewCardModal( getContext<KanbanContext>() );
 		},
 
-		stopPropagation: withSyncEvent( ( event: Event ) => {
-			event.stopPropagation();
-		} ),
-
-		setNewCardTitle( event: Event ) {
-			const context = getContext<KanbanContext>();
-			context.newCardTitle = getInputValue<HTMLInputElement>( event );
-		},
-
-		setNewCardPriority( event: Event ) {
-			const context = getContext<KanbanContext>();
-			context.newCardPriority = getInputValue<HTMLSelectElement>( event ) as Priority;
-		},
-
-		setNewCardDescription( event: Event ) {
-			const context = getContext<KanbanContext>();
-			context.newCardDescription = getInputValue<HTMLTextAreaElement>( event );
-		},
-
-		setNewCardAssignee( event: Event ) {
-			const context = getContext<KanbanContext>();
-			context.newCardAssignee = getInputValue<HTMLInputElement>( event );
-		},
-
 		createCard() {
 			const context = getContext<KanbanContext>();
 
@@ -834,26 +805,6 @@ store( 'kanban', {
 			}
 		},
 
-		setEditTitle( event: Event ) {
-			const context = getContext<KanbanContext>();
-			context.editTitle = getInputValue<HTMLInputElement>( event );
-		},
-
-		setEditPriority( event: Event ) {
-			const context = getContext<KanbanContext>();
-			context.editPriority = getInputValue<HTMLSelectElement>( event ) as Priority;
-		},
-
-		setEditDescription( event: Event ) {
-			const context = getContext<KanbanContext>();
-			context.editDescription = getInputValue<HTMLTextAreaElement>( event );
-		},
-
-		setEditAssignee( event: Event ) {
-			const context = getContext<KanbanContext>();
-			context.editAssignee = getInputValue<HTMLInputElement>( event );
-		},
-
 		handleEditBlur: withSyncEvent( ( event: FocusEvent ) => {
 			const context = getContext<KanbanContext>();
 			const { ref } = getElement();
@@ -873,11 +824,6 @@ store( 'kanban', {
 
 		saveEdit() {
 			performEdit( getContext<KanbanContext>() );
-		},
-
-		cancelEdit() {
-			const context = getContext<KanbanContext>();
-			context.editingCardId = null;
 		},
 
 		deleteCard() {
@@ -900,25 +846,6 @@ store( 'kanban', {
 
 			location.column.cards.splice( location.index, 1 );
 			pushCommand( context, command );
-		},
-
-		// ========================
-		// SEARCH & FILTER
-		// ========================
-
-		updateSearch( event: Event ) {
-			const context = getContext<KanbanContext>();
-			context.searchQuery = getInputValue<HTMLInputElement>( event );
-		},
-
-		setFilter( event: Event ) {
-			const context = getContext<KanbanContext>();
-			context.filterPriority = getInputValue<HTMLSelectElement>( event ) as PriorityFilter;
-		},
-
-		clearSearch() {
-			const context = getContext<KanbanContext>();
-			context.searchQuery = '';
 		},
 
 		// ========================
@@ -1026,11 +953,6 @@ store( 'kanban', {
 		setHoveredRevision() {
 			const context = getContext<KanbanContext>();
 			context.hoveredRevisionId = getCardIdFromCommand( context.item as Command | undefined );
-		},
-
-		clearHoveredRevision() {
-			const context = getContext<KanbanContext>();
-			context.hoveredRevisionId = null;
 		},
 
 		resetToInitial() {
