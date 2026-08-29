@@ -60,39 +60,6 @@ const simulateSearch = async ( query: string ): Promise<SearchResult[]> => {
 };
 
 store( 'liveSearch', {
-	state: {
-		get hasResults(): boolean {
-			const context = getContext<LiveSearchContext>();
-			return context.results.length > 0;
-		},
-		get hasQuery(): boolean {
-			const context = getContext<LiveSearchContext>();
-			return context.query.trim().length > 0;
-		},
-		get showDropdown(): boolean {
-			const context = getContext<LiveSearchContext>();
-			return context.isOpen && ( context.isLoading || context.results.length > 0 );
-		},
-		get selectedResult(): SearchResult | null {
-			const context = getContext<LiveSearchContext>();
-			if ( context.selectedIndex >= 0 && context.selectedIndex < context.results.length ) {
-				return context.results[ context.selectedIndex ];
-			}
-			return null;
-		},
-		// Derived state: is this result item selected?
-		get isResultSelected(): boolean {
-			const context = getContext<LiveSearchContext>();
-			if ( ! context.item ) return false;
-			const idx = context.results.findIndex( ( r ) => r.id === context.item!.id );
-			return context.selectedIndex === idx;
-		},
-		// Derived state: are there recent searches?
-		get hasRecentSearches(): boolean {
-			const context = getContext<LiveSearchContext>();
-			return context.recentSearches.length > 0;
-		},
-	},
 	actions: {
 		*updateQuery( event: InputEvent ) {
 			const context = getContext<LiveSearchContext>();

@@ -14,19 +14,19 @@
                     type="text"
                     class="input"
                     placeholder="Search for something..."
-                    data-wp-bind--value="context.query"
+                    data-wp-input="context.query"
                     data-wp-on--input="actions.updateQuery"
                     data-wp-on--keydown="actions.handleKeydown"
                     data-wp-on--focus="actions.focusInput"
                 >
-                <span class="loading-spinner absolute" style="right: 12px; top: 12px;" data-wp-bind--hidden="!context.isLoading" hidden="true"></span>
+                <span class="loading-spinner absolute" style="right: 12px; top: 12px;" data-wp-show="context.isLoading"></span>
             </div>
 
-            <div class="search-results" data-wp-bind--hidden="!state.showDropdown">
+            <div class="search-results" data-wp-show="context.isOpen && (context.isLoading || context.results.length > 0)">
                 <template data-wp-each="context.results" data-wp-each-key="context.item.id">
                     <div
                         class="search-result-item"
-                        data-wp-class--active="state.isResultSelected"
+                        data-wp-class--active="context.selectedIndex === context.results.findIndex(r => r.id === context.item.id)"
                         data-wp-on--click="actions.selectResult"
                     >
                         <div class="text-sm font-display" data-wp-text="context.item.title">_</div>
@@ -35,7 +35,7 @@
                 </template>
             </div>
 
-            <div class="mt-sm" data-wp-bind--hidden="!state.hasRecentSearches">
+            <div class="mt-sm" data-wp-show="context.recentSearches.length > 0">
                 <p class="text-xs text-faint italic">Recent inquiries:</p>
                 <div class="flex gap-xs flex-wrap mt-xs">
                     <template data-wp-each="context.recentSearches">
@@ -51,8 +51,8 @@
         <span class="directive-tag directive-tag--full">data-wp-interactive</span>
         <span class="directive-tag directive-tag--full">data-wp-context</span>
         <span class="directive-tag directive-tag--full">data-wp-init</span>
-        <span class="directive-tag directive-tag--full">data-wp-bind--value</span>
-        <span class="directive-tag directive-tag--full">data-wp-bind--hidden</span>
+        <span class="directive-tag directive-tag--full">data-wp-input</span>
+        <span class="directive-tag directive-tag--full">data-wp-show</span>
         <span class="directive-tag directive-tag--full">data-wp-on--input</span>
         <span class="directive-tag directive-tag--full">data-wp-on--keydown</span>
         <span class="directive-tag directive-tag--full">data-wp-on--focus</span>
