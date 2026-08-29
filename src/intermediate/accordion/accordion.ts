@@ -18,13 +18,6 @@ interface AccordionContext {
 }
 
 store( 'accordion', {
-	state: {
-		// Derived state: is the current panel open?
-		get isPanelOpen(): boolean {
-			const context = getContext<AccordionContext>();
-			return context.panelId ? context.openPanels.includes( context.panelId ) : false;
-		},
-	},
 	actions: {
 		togglePanel: () => {
 			const context = getContext<AccordionContext>();
@@ -47,10 +40,9 @@ store( 'accordion', {
 				}
 			}
 		},
-		toggleMultipleMode: () => {
+		handleMultipleModeChange: () => {
 			const context = getContext<AccordionContext>();
-			context.allowMultiple = ! context.allowMultiple;
-			// Keep only first panel open when switching to single mode
+			// data-wp-input already toggled allowMultiple; just enforce single-mode constraint
 			if ( ! context.allowMultiple && context.openPanels.length > 1 ) {
 				context.openPanels = [ context.openPanels[ 0 ] ];
 			}
