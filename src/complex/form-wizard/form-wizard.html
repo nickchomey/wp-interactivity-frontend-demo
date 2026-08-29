@@ -13,53 +13,53 @@
             data-wp-watch="callbacks.focusWhenVisible">
             <!-- Progress -->
             <div class="wizard-steps">
-                <div class="wizard-step" data-wp-context='{ "stepNumber": 1 }' data-wp-class--active="state.isStepActive" data-wp-class--completed="state.isStepCompleted">
+                <div class="wizard-step" data-wp-context='{ "stepNumber": 1 }' data-wp-class--active="context.currentStep === context.stepNumber" data-wp-class--completed="context.currentStep > context.stepNumber">
                     <span class="wizard-step-number">I</span>
                     <span class="text-xs italic">Identity</span>
                 </div>
-                <div class="wizard-step" data-wp-context='{ "stepNumber": 2 }' data-wp-class--active="state.isStepActive" data-wp-class--completed="state.isStepCompleted">
+                <div class="wizard-step" data-wp-context='{ "stepNumber": 2 }' data-wp-class--active="context.currentStep === context.stepNumber" data-wp-class--completed="context.currentStep > context.stepNumber">
                     <span class="wizard-step-number">II</span>
                     <span class="text-xs italic">Contact</span>
                 </div>
-                <div class="wizard-step" data-wp-context='{ "stepNumber": 3 }' data-wp-class--active="state.isStepActive" data-wp-class--completed="context.isComplete">
+                <div class="wizard-step" data-wp-context='{ "stepNumber": 3 }' data-wp-class--active="context.currentStep === context.stepNumber" data-wp-class--completed="context.isComplete">
                     <span class="wizard-step-number">III</span>
                     <span class="text-xs italic">Complete</span>
                 </div>
             </div>
 
             <!-- Step 1 -->
-            <div data-wp-context='{ "stepNumber": 1 }' data-wp-bind--hidden="!state.shouldShowStepPanel">
+            <div data-wp-context='{ "stepNumber": 1 }' data-wp-show="context.currentStep === context.stepNumber">
                 <label class="text-sm italic">Your Name</label>
-                <input type="text" class="input mt-xs" data-wp-context='{ "fieldName": "name" }' data-wp-bind--value="context.name" data-wp-on--input="actions.updateField" data-wp-on--keydown="actions.handleEnter" placeholder="By what name shall we know you?">
-                <p class="text-xs text-wp-blue italic" data-wp-bind--hidden="!context.errors.name" data-wp-text="context.errors.name">_</p>
+                <input type="text" class="input mt-xs" data-wp-input="context.name" data-wp-on--input="actions.validateField" data-wp-on--keydown="actions.handleEnter" placeholder="By what name shall we know you?">
+                <p class="text-xs text-wp-blue italic" data-wp-show="context.errors.name" data-wp-text="context.errors.name">_</p>
             </div>
 
             <!-- Step 2 -->
-            <div data-wp-context='{ "stepNumber": 2 }' data-wp-bind--hidden="!state.shouldShowStepPanel" hidden="true">
+            <div data-wp-context='{ "stepNumber": 2 }' data-wp-show="context.currentStep === context.stepNumber">
                 <label class="text-sm italic">Your Email</label>
-                <input type="email" class="input mt-xs" data-wp-context='{ "fieldName": "email" }' data-wp-class--input--error="state.hasFieldError" data-wp-bind--value="context.email" data-wp-on--input="actions.updateField" data-wp-on--keydown="actions.handleEnter" placeholder="How shall we reach you?">
-                <p class="text-xs text-wp-blue italic" data-wp-bind--hidden="!context.errors.email" data-wp-text="context.errors.email">_</p>
+                <input type="email" class="input mt-xs" data-wp-class--input--error="!!context.errors[context.fieldName]" data-wp-input="context.email" data-wp-on--input="actions.validateField" data-wp-on--keydown="actions.handleEnter" placeholder="How shall we reach you?">
+                <p class="text-xs text-wp-blue italic" data-wp-show="context.errors.email" data-wp-text="context.errors.email">_</p>
             </div>
 
             <!-- Step 3 / Complete -->
-            <div data-wp-bind--hidden="!state.shouldShowCompletePanel" hidden="true">
+            <div data-wp-show="context.currentStep === 3 && !context.isComplete">
                 <p class="text-sm text-center italic">Ready to seal your submission?</p>
                 <p class="text-xs text-faint text-center mt-sm">Name: <span class="font-display" data-wp-text="context.name">_</span></p>
                 <p class="text-xs text-faint text-center">Email: <span data-wp-text="context.email">_</span></p>
             </div>
 
-            <div data-wp-bind--hidden="!context.isComplete" class="text-center" hidden="true">
+            <div data-wp-show="context.isComplete" class="text-center">
                 <p class="text-teal italic">Your submission is complete. Farewell.</p>
             </div>
 
             <!-- Navigation -->
-            <div class="flex justify-between mt-md" data-wp-bind--hidden="context.isComplete">
-                <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.prevStep" data-wp-bind--disabled="!state.canGoBack" disabled="true">← Back</button>
+            <div class="flex justify-between mt-md" data-wp-show="!context.isComplete">
+                <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.prevStep" data-wp-bind--disabled="context.currentStep <= 1 || context.isSubmitting" disabled="true">← Back</button>
                 <div class="flex gap-sm">
-                    <button class="btn btn--primary btn--sm" data-wp-bind--hidden="!state.shouldShowContinueButton" data-wp-bind--disabled="!state.canGoForward" data-wp-on--click="actions.nextStep">Continue →</button>
-                    <button class="btn btn--secondary btn--sm" data-wp-bind--hidden="!state.shouldShowSubmitButton" data-wp-class--no-outline="state.shouldShowSubmitting" data-wp-on--click="actions.submitForm" hidden="true">
-                        <span data-wp-bind--hidden="!state.shouldShowSubmitting">Submitting...</span>
-                        <span data-wp-bind--hidden="state.shouldShowSubmitting">Submit</span>
+                    <button class="btn btn--primary btn--sm" data-wp-show="context.currentStep !== 3" data-wp-bind--disabled="!(context.currentStep < context.totalSteps && state.isStepValid)" data-wp-on--click="actions.nextStep">Continue →</button>
+                    <button class="btn btn--secondary btn--sm" data-wp-show="context.currentStep === 3" data-wp-class--no-outline="context.isSubmitting" data-wp-on--click="actions.submitForm">
+                        <span data-wp-show="context.isSubmitting">Submitting...</span>
+                        <span data-wp-show="!context.isSubmitting">Submit</span>
                     </button>
                 </div>
             </div>
@@ -71,11 +71,11 @@
         <span class="directive-tag directive-tag--full">data-wp-interactive</span>
         <span class="directive-tag directive-tag--full">data-wp-context</span>
         <span class="directive-tag directive-tag--full">data-wp-watch</span>
+        <span class="directive-tag directive-tag--full">data-wp-show</span>
+        <span class="directive-tag directive-tag--full">data-wp-input</span>
         <span class="directive-tag directive-tag--full">data-wp-class--active</span>
         <span class="directive-tag directive-tag--full">data-wp-class--completed</span>
         <span class="directive-tag directive-tag--full">data-wp-class</span>
-        <span class="directive-tag directive-tag--full">data-wp-bind--hidden</span>
-        <span class="directive-tag directive-tag--full">data-wp-bind--value</span>
         <span class="directive-tag directive-tag--full">data-wp-bind--disabled</span>
         <span class="directive-tag directive-tag--full">data-wp-on--input</span>
         <span class="directive-tag directive-tag--full">data-wp-on--keydown</span>
