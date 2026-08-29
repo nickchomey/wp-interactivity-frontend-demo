@@ -26,12 +26,12 @@
                         <div
                             class="todo-checkbox"
                             data-wp-class--checked="context.item.completed"
-                            data-wp-on--click="actions.toggleTodo"
+                            data-wp-on--click="context.item.completed = !context.item.completed"
                         >
                             <span data-wp-show="context.item.completed">✓</span>
                         </div>
                         <span class="todo-text" data-wp-class--completed="context.item.completed" data-wp-text="context.item.text"></span>
-                        <button class="btn btn--ghost btn--sm todo-delete" data-wp-on--click="actions.deleteTodo">×</button>
+                        <button class="btn btn--ghost btn--sm todo-delete" data-wp-on--click="context.todos.splice(context.todos.findIndex(t => t.id === context.item.id), 1)">×</button>
                     </div>
                 </template>
             </div>
@@ -41,8 +41,8 @@
                     <span data-wp-text="context.todos.filter(t => !t.completed).length">0</span> tasks remaining
                 </p>
                 <div class="flex gap-xs">
-                    <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.toggleAll">Toggle All</button>
-                    <button class="btn btn--ghost btn--sm" data-wp-bind--disabled="!context.todos.some(t => t.completed)" data-wp-on--click="actions.clearCompleted">Clear Completed</button>
+                    <button class="btn btn--ghost btn--sm" data-wp-on--click="const all = context.todos.every(t => t.completed); context.todos.forEach(t => t.completed = !all)">Toggle All</button>
+                    <button class="btn btn--ghost btn--sm" data-wp-bind--disabled="!context.todos.some(t => t.completed)" data-wp-on--click="context.todos = context.todos.filter(t => !t.completed)">Clear Completed</button>
                 </div>
             </div>
         </div>

@@ -48,32 +48,5 @@ store( 'todoList', {
 				addTodoItem( getContext<TodoContext>() );
 			}
 		},
-		toggleTodo: () => {
-			const context = getContext<TodoContext>();
-			if ( context.item ) {
-				context.item.completed = ! context.item.completed;
-			}
-		},
-		deleteTodo: () => {
-			const context = getContext<TodoContext>();
-			const item = context.item;
-			if ( item ) {
-				const idx = context.todos.findIndex( ( t ) => t.id === item.id );
-				if ( idx > -1 ) {
-					context.todos.splice( idx, 1 );
-				}
-			}
-		},
-		toggleAll: () => {
-			const context = getContext<TodoContext>();
-			const allCompleted = context.todos.every( ( t ) => t.completed );
-			context.todos.forEach( ( t ) => {
-				t.completed = ! allCompleted;
-			} );
-		},
-		clearCompleted: () => {
-			const context = getContext<TodoContext>();
-			context.todos = context.todos.filter( ( t ) => ! t.completed );
-		},
 	},
 } );
