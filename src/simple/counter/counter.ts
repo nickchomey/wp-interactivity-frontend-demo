@@ -6,31 +6,9 @@
  * - data-wp-context (local state)
  * - data-wp-text (reactive text content)
  * - data-wp-on--click (event handling)
- * - getContext<T>() (access local state)
+ *
+ * No JavaScript needed — the counter actions are inline expressions in HTML.
  */
 
-import { store, getContext } from '@wordpress/interactivity';
-
-interface CounterContext {
-	count: number;
-}
-
-store( 'counter', {
-	actions: {
-		increment: () => {
-			const context = getContext<CounterContext>();
-			context.count++;
-		},
-		decrement: () => {
-			const context = getContext<CounterContext>();
-			if ( context.count > 0 ) {
-				context.count--;
-			}
-		},
-		reset: () => {
-			const context = getContext<CounterContext>();
-			context.count = 0;
-		},
-	},
-} );
+// No store needed — context mutations are handled by inline expressions.
 
