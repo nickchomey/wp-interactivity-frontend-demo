@@ -2,22 +2,10 @@
  * Input Binding Store - Simple Example #3
  *
  * Demonstrates:
- * - data-wp-bind--value (two-way binding)
- * - data-wp-on--input (real-time updates)
- * - Event handling with input events
+ * - data-wp-input (two-way binding, replaces data-wp-bind--value + data-wp-on--input)
+ *
+ * No JavaScript needed — data-wp-input handles two-way binding declaratively.
+ * The store is intentionally empty; context.value is managed entirely in HTML.
  */
 
-import { store, getContext } from '@wordpress/interactivity';
-
-interface InputContext {
-	value: string;
-}
-
-store( 'inputBinding', {
-	actions: {
-		updateValue: ( event: InputEvent ) => {
-			const context = getContext<InputContext>();
-			context.value = ( event.target as HTMLInputElement ).value;
-		},
-	},
-} );
+// No store needed — data-wp-input="context.value" is sufficient.
