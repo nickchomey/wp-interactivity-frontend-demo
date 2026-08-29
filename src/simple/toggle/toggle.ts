@@ -14,12 +14,6 @@ interface ToggleContext {
 }
 
 store( 'toggle', {
-	state: {
-		get toggleButtonText(): string {
-			const context = getContext<ToggleContext>();
-			return context.isOpen ? 'Conceal' : 'Reveal';
-		},
-	},
 	actions: {
 		toggle: () => {
 			const context = getContext<ToggleContext>();
