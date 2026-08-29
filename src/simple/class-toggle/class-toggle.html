@@ -18,8 +18,8 @@
                 <p class="text-xs text-faint">Touches: <span data-wp-text="context.clickCount">0</span></p>
             </div>
             <div class="flex gap-sm mt-md">
-                <button class="btn btn--primary btn--sm" data-wp-on--click="actions.toggleActive">Toggle State</button>
-                <button class="btn btn--secondary btn--sm" data-wp-on--click="actions.toggleHighlight">Highlight</button>
+                <button class="btn btn--primary btn--sm" data-wp-on--click="context.isActive = !context.isActive; context.clickCount++">Toggle State</button>
+                <button class="btn btn--secondary btn--sm" data-wp-on--click="context.isHighlighted = !context.isHighlighted">Highlight</button>
             </div>
         </div>
     </div>

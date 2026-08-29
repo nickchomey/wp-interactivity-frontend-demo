@@ -5,26 +5,8 @@
  * - data-wp-class--classname (toggle CSS classes)
  * - Multiple class toggles on same element
  * - State-driven styling
+ *
+ * No JavaScript needed — the toggle actions are inline expressions in HTML.
  */
 
-import { store, getContext } from '@wordpress/interactivity';
-
-interface ClassToggleContext {
-	isActive: boolean;
-	isHighlighted: boolean;
-	clickCount: number;
-}
-
-store( 'classToggle', {
-	actions: {
-		toggleActive: () => {
-			const context = getContext<ClassToggleContext>();
-			context.isActive = ! context.isActive;
-			context.clickCount++;
-		},
-		toggleHighlight: () => {
-			const context = getContext<ClassToggleContext>();
-			context.isHighlighted = !context.isHighlighted;
-		},
-	},
-} );
+// No store needed — context mutations are handled by inline expressions.
