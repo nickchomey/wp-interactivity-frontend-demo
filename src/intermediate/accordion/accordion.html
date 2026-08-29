@@ -52,7 +52,7 @@
             </div>
 
             <label class="text-xs text-faint mt-sm flex items-center gap-sm italic">
-                <input type="checkbox" data-wp-input="context.allowMultiple" data-wp-on--change="actions.handleMultipleModeChange">
+                <input type="checkbox" data-wp-input="context.allowMultiple" data-wp-on--change="!context.allowMultiple && context.openPanels.length > 1 && (context.openPanels = [context.openPanels[0]])">
                 Allow multiple sections open
             </label>
         </div>

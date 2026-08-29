@@ -40,12 +40,5 @@ store( 'accordion', {
 				}
 			}
 		},
-		handleMultipleModeChange: () => {
-			const context = getContext<AccordionContext>();
-			// data-wp-input already toggled allowMultiple; just enforce single-mode constraint
-			if ( ! context.allowMultiple && context.openPanels.length > 1 ) {
-				context.openPanels = [ context.openPanels[ 0 ] ];
-			}
-		},
 	},
 } );
