@@ -80,10 +80,5 @@ store( 'searchFilter', {
 				}
 			}
 		},
-		resetFilters: () => {
-			const context = getContext<SearchFilterContext>();
-			context.searchTerm = '';
-			context.selectedCategories = [ FilterCategory.All ];
-		},
 	},
 } );

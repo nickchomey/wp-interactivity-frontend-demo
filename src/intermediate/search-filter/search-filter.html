@@ -27,7 +27,7 @@
                 <p class="text-xs text-faint italic">
                     <span data-wp-text="state.filteredItems.length">0</span> of <span data-wp-text="context.items.length">0</span> items
                 </p>
-                <button class="btn btn--ghost btn--sm" data-wp-show="context.searchTerm !== '' || (context.selectedCategories.length && !context.selectedCategories.includes('all'))" data-wp-on--click="actions.resetFilters">Reset</button>
+                <button class="btn btn--ghost btn--sm" data-wp-show="context.searchTerm !== '' || (context.selectedCategories.length && !context.selectedCategories.includes('all'))" data-wp-on--click="context.searchTerm = ''; context.selectedCategories = ['all']">Reset</button>
             </div>
 
             <div class="mt-md">
