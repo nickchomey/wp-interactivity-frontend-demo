@@ -16,7 +16,7 @@
                     data-wp-context='{ "tabId": "tab1" }'
                     data-wp-class--active="context.activeTab === context.tabId"
                     data-wp-bind--aria-selected="context.activeTab === context.tabId"
-                    data-wp-on--click="actions.setActiveTab"
+                    data-wp-on--click="context.tabId && (context.activeTab = context.tabId)"
                 >Prologue</button>
                 <button
                     class="tab-btn"
@@ -24,7 +24,7 @@
                     data-wp-context='{ "tabId": "tab2" }'
                     data-wp-class--active="context.activeTab === context.tabId"
                     data-wp-bind--aria-selected="context.activeTab === context.tabId"
-                    data-wp-on--click="actions.setActiveTab"
+                    data-wp-on--click="context.tabId && (context.activeTab = context.tabId)"
                 >Chapter</button>
                 <button
                     class="tab-btn"
@@ -32,7 +32,7 @@
                     data-wp-context='{ "tabId": "tab3" }'
                     data-wp-class--active="context.activeTab === context.tabId"
                     data-wp-bind--aria-selected="context.activeTab === context.tabId"
-                    data-wp-on--click="actions.setActiveTab"
+                    data-wp-on--click="context.tabId && (context.activeTab = context.tabId)"
                 >Epilogue</button>
             </div>
 

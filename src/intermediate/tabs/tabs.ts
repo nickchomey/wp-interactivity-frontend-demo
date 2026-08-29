@@ -22,13 +22,6 @@ interface TabsContext {
 
 const { actions } = store( 'tabs', {
 	actions: {
-		setActiveTab: () => {
-			const context = getContext<TabsContext>();
-			// tabId is provided by local context on each button
-			if ( context.tabId ) {
-				context.activeTab = context.tabId;
-			}
-		},
 		nextTab: () => {
 			const context = getContext<TabsContext>();
 			const currentIndex = context.tabs.indexOf( context.activeTab );
