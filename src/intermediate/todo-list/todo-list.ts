@@ -38,27 +38,7 @@ const addTodoItem = ( context: TodoContext ) => {
 };
 
 store( 'todoList', {
-	state: {
-		get remainingItems(): number {
-			const context = getContext<TodoContext>();
-			return context.todos.filter( ( t ) => ! t.completed ).length;
-		},
-		// Derived state: are there no todos?
-		get hasNoTodos(): boolean {
-			const context = getContext<TodoContext>();
-			return context.todos.length === 0;
-		},
-		// Derived state: are there completed items?
-		get hasCompletedItems(): boolean {
-			const context = getContext<TodoContext>();
-			return context.todos.some( ( t ) => t.completed );
-		},
-	},
 	actions: {
-		updateNewTodoText: ( event: InputEvent ) => {
-			const context = getContext<TodoContext>();
-			context.newTodoText = ( event.target as HTMLInputElement ).value;
-		},
 		addTodo: () => {
 			const context = getContext<TodoContext>();
 			addTodoItem( context );
