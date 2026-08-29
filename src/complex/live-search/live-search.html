@@ -17,7 +17,7 @@
                     data-wp-input="context.query"
                     data-wp-on--input="actions.updateQuery"
                     data-wp-on--keydown="actions.handleKeydown"
-                    data-wp-on--focus="actions.focusInput"
+                    data-wp-on--focus="context.query.trim() && (context.isOpen = true)"
                 >
                 <span class="loading-spinner absolute" style="right: 12px; top: 12px;" data-wp-show="context.isLoading"></span>
             </div>

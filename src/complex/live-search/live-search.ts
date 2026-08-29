@@ -162,13 +162,6 @@ store( 'liveSearch', {
 			}
 		},
 
-		focusInput() {
-			const context = getContext<LiveSearchContext>();
-			if ( context.query.trim() ) {
-				context.isOpen = true;
-			}
-		},
-
 		closeOnOutsideClick( event: MouseEvent ) {
 			const context = getContext<LiveSearchContext>();
 			const { ref } = getElement();
