@@ -9,7 +9,7 @@
             Like a whispered secret, content revealed and concealed at will.
         </p>
         <div class="demo-area" data-wp-interactive="toggle" data-wp-context='{ "isOpen": false }'>
-            <button class="btn btn--primary" data-wp-on--click="actions.toggle" data-wp-bind--aria-expanded="context.isOpen">
+            <button class="btn btn--primary" data-wp-on--click="context.isOpen = !context.isOpen" data-wp-bind--aria-expanded="context.isOpen">
                 <span data-wp-text="context.isOpen ? 'Conceal' : 'Reveal'">Reveal</span> Content
             </button>
             <div class="toggle-panel" data-wp-show="context.isOpen">
