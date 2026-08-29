@@ -13,24 +13,24 @@
                 type="text"
                 class="input"
                 placeholder="Search the registry..."
-                data-wp-bind--value="context.searchTerm"
-                data-wp-on--input="actions.updateSearch"
+                data-wp-input="context.searchTerm"
+                data-wp-on--input="context.currentPage = 1; context.selectedRows = []"
             >
 
             <div class="flex gap-xs mt-sm mb-sm flex-wrap">
-                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "" }' data-wp-class--active="state.isFilterActive" data-wp-on--click="actions.setStatusFilter">All</button>
-                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "active" }' data-wp-class--active="state.isFilterActive" data-wp-on--click="actions.setStatusFilter">Active</button>
-                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "inactive" }' data-wp-class--active="state.isFilterActive" data-wp-on--click="actions.setStatusFilter">Inactive</button>
+                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "" }' data-wp-class--active="context.statusFilter === context.filterValue" data-wp-on--click="actions.setStatusFilter">All</button>
+                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "active" }' data-wp-class--active="context.statusFilter === context.filterValue" data-wp-on--click="actions.setStatusFilter">Active</button>
+                <button class="btn btn--ghost btn--sm" data-wp-context='{ "filterValue": "inactive" }' data-wp-class--active="context.statusFilter === context.filterValue" data-wp-on--click="actions.setStatusFilter">Inactive</button>
             </div>
 
             <table class="data-table">
                 <thead>
                     <tr>
                         <th data-wp-context='{ "columnName": "name" }' data-wp-on--click="actions.sortBy">
-                            Name <span class="sort-icon" data-wp-class--active="state.isSortColumnActive" data-wp-text="state.sortIcon">↕</span>
+                            Name <span class="sort-icon" data-wp-class--active="context.sortColumn === context.columnName" data-wp-text="context.sortColumn !== context.columnName ? '↕' : context.sortDirection === 'asc' ? '↑' : '↓'">↕</span>
                         </th>
                         <th data-wp-context='{ "columnName": "role" }' data-wp-on--click="actions.sortBy">
-                            Role <span class="sort-icon" data-wp-class--active="state.isSortColumnActive" data-wp-text="state.sortIcon">↕</span>
+                            Role <span class="sort-icon" data-wp-class--active="context.sortColumn === context.columnName" data-wp-text="context.sortColumn !== context.columnName ? '↕' : context.sortDirection === 'asc' ? '↑' : '↓'">↕</span>
                         </th>
                         <th>Status</th>
                     </tr>
@@ -41,21 +41,23 @@
                             <td class="font-display" data-wp-text="context.item.name">_</td>
                             <td data-wp-text="context.item.role">_</td>
                             <td>
-                                <span class="badge" data-wp-class--badge--success="state.isStatusActive" data-wp-class--badge--warning="state.isStatusPending" data-wp-class--badge--error="state.isStatusInactive" data-wp-text="context.item.status">_</span>
+                                <span class="badge" data-wp-class--badge--success="context.item?.status === 'active'" data-wp-class--badge--warning="context.item?.status === 'pending'" data-wp-class--badge--error="context.item?.status === 'inactive'" data-wp-text="context.item.status">_</span>
                             </td>
                         </tr>
                     </template>
                 </tbody>
             </table>
 
+            <p class="text-xs text-faint italic text-center mt-sm" data-wp-show="state.totalCount === 0">No entries match your search</p>
+
             <div class="flex justify-between items-center mt-sm">
                 <p class="text-xs text-faint italic">
                     <span data-wp-text="state.paginatedData.length">0</span> of <span data-wp-text="state.totalCount">0</span> entries
                 </p>
                 <div class="flex gap-xs items-center">
-                    <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.prevPage" data-wp-bind--disabled="state.isFirstPage">←</button>
+                    <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.prevPage" data-wp-bind--disabled="context.currentPage === 1">←</button>
                     <span class="text-sm font-mono"><span data-wp-text="context.currentPage">1</span> / <span data-wp-text="state.totalPages">1</span></span>
-                    <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.nextPage" data-wp-bind--disabled="state.isLastPage">→</button>
+                    <button class="btn btn--ghost btn--sm" data-wp-on--click="actions.nextPage" data-wp-bind--disabled="context.currentPage >= state.totalPages">→</button>
                 </div>
             </div>
         </div>
@@ -66,7 +68,8 @@
         <span class="directive-tag directive-tag--curated">Filtering</span>
         <span class="directive-tag directive-tag--full">data-wp-interactive</span>
         <span class="directive-tag directive-tag--full">data-wp-context</span>
-        <span class="directive-tag directive-tag--full">data-wp-bind--value</span>
+        <span class="directive-tag directive-tag--full">data-wp-input</span>
+        <span class="directive-tag directive-tag--full">data-wp-show</span>
         <span class="directive-tag directive-tag--full">data-wp-bind--disabled</span>
         <span class="directive-tag directive-tag--full">data-wp-on--input</span>
         <span class="directive-tag directive-tag--full">data-wp-on--click</span>

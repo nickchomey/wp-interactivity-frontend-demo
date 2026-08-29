@@ -55,131 +55,60 @@ const tableData: TableRow[] = [
 	{ id: 12, name: 'Liam Thomas', email: 'liam@example.com', role: 'Editor', status: 'active', createdAt: '2024-01-08', lastLogin: '2024-02-19' },
 ];
 
-// Helper functions (not in store)
-const getFilteredData = ( searchTerm: string, statusFilter: string ): TableRow[] => {
-	let result = tableData;
-
-	if ( searchTerm ) {
-		const term = searchTerm.toLowerCase();
-		result = result.filter(
-			( row ) =>
-				row.name.toLowerCase().includes( term ) ||
-				row.email.toLowerCase().includes( term ) ||
-				row.role.toLowerCase().includes( term )
-		);
-	}
-
-	if ( statusFilter && statusFilter !== 'all' ) {
-		result = result.filter( ( row ) => row.status === statusFilter );
-	}
-
-	return result;
-};
-
-const getSortedData = ( data: TableRow[], sortColumn: string, sortDirection: SortDirection | null ): TableRow[] => {
-	if ( ! sortColumn || ! sortDirection ) return data;
-
-	// Validate sortColumn is a valid table column
-	const validColumns: (keyof TableRow)[] = [ 'id', 'name', 'email', 'role', 'status', 'createdAt', 'lastLogin' ];
-	if ( ! validColumns.includes( sortColumn as keyof TableRow ) ) return data;
-
-	return [ ...data ].sort( ( a, b ) => {
-		const aVal = a[ sortColumn as keyof TableRow ];
-		const bVal = b[ sortColumn as keyof TableRow ];
-
-		// Handle string comparison
-		if ( typeof aVal === 'string' && typeof bVal === 'string' ) {
-			const comparison = aVal.localeCompare( bVal );
-			return isAscending( sortDirection ) ? comparison : -comparison;
-		}
-
-		// Handle numeric comparison (e.g., id column)
-		if ( typeof aVal === 'number' && typeof bVal === 'number' ) {
-			return isAscending( sortDirection ) ? aVal - bVal : bVal - aVal;
-		}
-
-		return 0;
-	} );
-};
-
-const getPaginatedData = ( data: TableRow[], currentPage: number, pageSize: number ): TableRow[] => {
-	const start = ( currentPage - 1 ) * pageSize;
-	const end = start + pageSize;
-	return data.slice( start, end );
-};
-
-// Combined data processing - called once per state change, not repeatedly
-const getProcessedData = ( context: DataTableContext ): {
-	filtered: TableRow[];
-	sorted: TableRow[];
-	paginated: TableRow[];
-	totalCount: number;
-	totalPages: number;
-} => {
-	const filtered = getFilteredData( context.searchTerm, context.statusFilter );
-	const sorted = getSortedData( filtered, context.sortColumn, context.sortDirection );
-	const paginated = getPaginatedData( sorted, context.currentPage, context.pageSize );
-	return {
-		filtered,
-		sorted,
-		paginated,
-		totalCount: filtered.length,
-		totalPages: Math.ceil( filtered.length / context.pageSize ),
-	};
-};
-
 store( 'dataTable', {
 	state: {
+		// Each getter is a Preact Signals `computed` (via PropSignal).
+		// Reads of `context.*` inside are tracked, so computeds cache and
+		// only re-run when their dependencies change. Chaining them
+		// (filtered -> sorted -> paginated) avoids the previous 3×
+		// `getProcessedData(context)` per render and removes the unused
+		// `filtered`/`sorted` allocations.
+		get filteredData(): TableRow[] {
+			const context = getContext<DataTableContext>();
+			let result = tableData;
+			if ( context.searchTerm ) {
+				const term = context.searchTerm.toLowerCase();
+				result = result.filter(
+					(row) =>
+						row.name.toLowerCase().includes(term) || row.email.toLowerCase().includes(term) || row.role.toLowerCase().includes(term));
+			}
+			if ( context.statusFilter && context.statusFilter !== 'all' ) {
+				result = result.filter( ( row ) => row.status === context.statusFilter );
+			}
+			return result;
+		},
+		get sortedData(): TableRow[] {
+			const context = getContext<DataTableContext>();
+			const data = ( this as unknown as { filteredData: TableRow[] } ).filteredData;
+			if ( ! context.sortColumn || ! context.sortDirection ) return data;
+			const validColumns: (keyof TableRow)[] = [ 'id', 'name', 'email', 'role', 'status', 'createdAt', 'lastLogin' ];
+			if ( ! validColumns.includes( context.sortColumn as keyof TableRow ) ) return data;
+			return [ ...data ].sort( ( a, b ) => {
+				const aVal = a[ context.sortColumn as keyof TableRow ];
+				const bVal = b[ context.sortColumn as keyof TableRow ];
+				if ( typeof aVal === 'string' && typeof bVal === 'string' ) {
+					const comparison = aVal.localeCompare( bVal );
+					return isAscending( context.sortDirection ) ? comparison : -comparison;
+				}
+				if ( typeof aVal === 'number' && typeof bVal === 'number' ) {
+					return isAscending( context.sortDirection ) ? aVal - bVal : bVal - aVal;
+				}
+				return 0;
+			} );
+		},
 		get paginatedData(): TableRow[] {
 			const context = getContext<DataTableContext>();
-			return getProcessedData( context ).paginated;
+			const data = ( this as unknown as { sortedData: TableRow[] } ).sortedData;
+			const start = ( context.currentPage - 1 ) * context.pageSize;
+			return data.slice( start, start + context.pageSize );
 		},
 		get totalCount(): number {
-			const context = getContext<DataTableContext>();
-			return getProcessedData( context ).totalCount;
+			return ( this as unknown as { filteredData: TableRow[] } ).filteredData.length;
 		},
 		get totalPages(): number {
 			const context = getContext<DataTableContext>();
-			return getProcessedData( context ).totalPages;
-		},
-		// Derived state: is this filter button active?
-		get isFilterActive(): boolean {
-			const context = getContext<DataTableContext>();
-			return context.statusFilter === context.filterValue;
-		},
-		// Derived state: is this sort column active?
-		get isSortColumnActive(): boolean {
-			const context = getContext<DataTableContext>();
-			return context.sortColumn === context.columnName;
-		},
-		// Derived state: get sort icon for current column
-		get sortIcon(): string {
-			const context = getContext<DataTableContext>();
-			if ( context.sortColumn !== context.columnName ) return '↕';
-			return isAscending( context.sortDirection ) ? '↑' : '↓';
-		},
-		// Derived state: is this the first page?
-		get isFirstPage(): boolean {
-			const context = getContext<DataTableContext>();
-			return context.currentPage === 1;
-		},
-		// Derived state: is this the last page?
-		get isLastPage(): boolean {
-			const context = getContext<DataTableContext>();
-			return context.currentPage >= getProcessedData( context ).totalPages;
-		},
-		// Derived state: status badge classes
-		get isStatusActive(): boolean {
-			const context = getContext<DataTableContext>();
-			return context.item?.status === 'active';
-		},
-		get isStatusPending(): boolean {
-			const context = getContext<DataTableContext>();
-			return context.item?.status === 'pending';
-		},
-		get isStatusInactive(): boolean {
-			const context = getContext<DataTableContext>();
-			return context.item?.status === 'inactive';
+			const count = ( this as unknown as { filteredData: TableRow[] } ).filteredData.length;
+			return Math.ceil( count / context.pageSize ) || 1;
 		},
 	},
 	actions: {
@@ -204,9 +133,8 @@ store( 'dataTable', {
 
 		nextPage() {
 			const context = getContext<DataTableContext>();
-			const count = getFilteredData( context.searchTerm, context.statusFilter ).length;
-			const totalPages = Math.ceil( count / context.pageSize );
-			if ( context.currentPage < totalPages ) {
+			const state = store( 'dataTable' ).state as unknown as { totalPages: number };
+			if ( context.currentPage < state.totalPages ) {
 				context.currentPage++;
 			}
 		},
@@ -216,13 +144,6 @@ store( 'dataTable', {
 			if ( context.currentPage > 1 ) {
 				context.currentPage--;
 			}
-		},
-
-		updateSearch( event: InputEvent ) {
-			const context = getContext<DataTableContext>();
-			context.searchTerm = ( event.target as HTMLInputElement ).value;
-			context.currentPage = 1;
-			context.selectedRows = [];
 		},
 
 		setStatusFilter() {
